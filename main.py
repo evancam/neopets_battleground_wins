@@ -1,8 +1,11 @@
 import csv
+import datetime
 import os
 import requests
-from bs4 import BeautifulSoup
+import sys
 import time
+from bs4 import BeautifulSoup
+
 from constants import BATTLEGROUND_CHALLENGERS
 
 def fetch_total_wins(username):
@@ -52,7 +55,7 @@ def update_or_create_csv(input_csv_path, output_csv_path, usernames):
         usernames (list): List of usernames to process.
     """
     weekly_data = {}
-    current_week = "2024-12-01"  # Replace with dynamic date logic if needed
+    current_week = str((datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday())).isoformat())
 
     if os.path.exists(input_csv_path):
         with open(input_csv_path, "r") as file:
@@ -64,7 +67,7 @@ def update_or_create_csv(input_csv_path, output_csv_path, usernames):
     # Process each username
     for username in usernames:
         total_wins = fetch_total_wins(username)
-        time.sleep(60)  # Crawl delay
+        print(f"Processing {username}")
 
         if username not in weekly_data:
             weekly_data[username] = {"": username}
@@ -76,6 +79,7 @@ def update_or_create_csv(input_csv_path, output_csv_path, usernames):
         wins_this_week = total_wins - int(weekly_data[username].get(last_two_weeks[1], 0)) if len(last_two_weeks) > 1 else total_wins
         weekly_data[username]["# wins this week"] = wins_this_week
         weekly_data[username]["Last battled week"] = current_week if total_wins > 0 else weekly_data[username].get("Last battled week", current_week)
+        time.sleep(60)  # Crawl delay
 
     # Write updated data to the output CSV
     all_weeks = sorted(

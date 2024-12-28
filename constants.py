@@ -5,7 +5,7 @@ BATTLEGROUND_CHALLENGERS = [
 "Lanie and Lillie",
 "Unchained Monster",
 "Zombie Hooligan",
-# Brute Squad,
+# Brute Squad
 "Back Alley Bruiser",
 "Brutal Mercenary",
 "Commander Flint",
